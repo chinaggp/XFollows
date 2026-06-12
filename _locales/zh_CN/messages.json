@@ -1,0 +1,9 @@
+{
+  "extName": { "message": "XFollows" },
+  "extDesc": { "message": "根据兴趣标签自动回关 X/Twitter 粉丝" },
+  "settings_interval": { "message": "回关间隔 (分钟)" },
+  "settings_batchSize": { "message": "每次数量" },
+  "settings_tags": { "message": "标签筛选" },
+  "btn_start": { "message": "开始自动" },
+  "btn_stop": { "message": "停止" }
+}

@@ -1,0 +1,9 @@
+{
+  "extName": { "message": "XFollows" },
+  "extDesc": { "message": "Auto follow back X/Twitter users by interest tags" },
+  "settings_interval": { "message": "Interval (minutes)" },
+  "settings_batchSize": { "message": "Batch Size" },
+  "settings_tags": { "message": "Tag Filter" },
+  "btn_start": { "message": "Start Auto" },
+  "btn_stop": { "message": "Stop" }
+}
