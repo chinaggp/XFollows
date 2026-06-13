@@ -5,5 +5,15 @@
   "settings_batchSize": { "message": "Batch Size" },
   "settings_tags": { "message": "Tag Filter" },
   "btn_start": { "message": "Start Auto" },
-  "btn_stop": { "message": "Stop" }
+  "btn_stop": { "message": "Stop" },
+  "status_label": { "message": "Status" },
+  "status_running": { "message": "Running" },
+  "status_stopped": { "message": "Stopped" },
+  "processed_count": { "message": "Processed" },
+  "people_unit": { "message": "users" },
+  "last_run": { "message": "Last" },
+  "success": { "message": "Success" },
+  "failed": { "message": "Failed" },
+  "loading": { "message": "Loading..." },
+  "settings_clickDelay": { "message": "Click Interval (seconds)" }
 }

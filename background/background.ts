@@ -1,10 +1,15 @@
 import { getSettings, getTaskState, saveTaskState } from '../utils/storage';
-import { BackgroundMessage } from '../types';
-
-let currentAlarm: string | null = null;
+import { BackgroundMessage, Settings } from '../types';
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('XFollows installed');
+  
+  // 设定点击插件图标直接拉起 Side Panel 侧边栏
+  if (chrome.sidePanel) {
+    chrome.sidePanel
+      .setPanelBehavior({ openPanelOnActionClick: true })
+      .catch((error) => console.error('Failed to set side panel behavior:', error));
+  }
 });
 
 chrome.runtime.onMessage.addListener((message: BackgroundMessage, sender, sendResponse) => {
@@ -29,41 +34,62 @@ async function handleMessage(message: BackgroundMessage): Promise<any> {
 
 async function startTask() {
   const settings = await getSettings();
-  if (currentAlarm) {
-    chrome.alarms.clear(currentAlarm);
-  }
-  currentAlarm = 'xfollows-alarm';
-  chrome.alarms.create(currentAlarm, {
+  await chrome.alarms.clear('xfollows-alarm');
+  chrome.alarms.create('xfollows-alarm', {
     periodInMinutes: settings.intervalMinutes,
   });
   const state = await getTaskState();
   state.running = true;
   state.nextRunTime = Date.now() + settings.intervalMinutes * 60 * 1000;
   await saveTaskState(state);
+  
+  // 立即触发一次自动执行
+  await triggerBatchExecution();
   return { success: true };
 }
 
 async function stopTask() {
-  if (currentAlarm) {
-    chrome.alarms.clear(currentAlarm);
-    currentAlarm = null;
-  }
+  await chrome.alarms.clear('xfollows-alarm');
   const state = await getTaskState();
   state.running = false;
+  state.nextRunTime = null;
   await saveTaskState(state);
   return { success: true };
 }
 
-async function updateSettings(settings: any) {
-  // TODO: implement in Task 5
+async function updateSettings(settings: Settings) {
+  const state = await getTaskState();
+  if (state.running) {
+    await chrome.alarms.clear('xfollows-alarm');
+    chrome.alarms.create('xfollows-alarm', {
+      periodInMinutes: settings.intervalMinutes,
+    });
+    state.nextRunTime = Date.now() + settings.intervalMinutes * 60 * 1000;
+    await saveTaskState(state);
+  }
   return { success: true };
+}
+
+async function triggerBatchExecution() {
+  try {
+    const tabs = await chrome.tabs.query({ active: true, url: ['https://x.com/*', 'https://twitter.com/*'] });
+    if (tabs.length > 0 && tabs[0].id) {
+      await chrome.tabs.sendMessage(tabs[0].id, { type: 'EXECUTE_BATCH' });
+    }
+  } catch (e) {
+    console.warn('Failed to send message to active tab:', e);
+  }
 }
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === 'xfollows-alarm') {
-    const tabs = await chrome.tabs.query({ active: true, url: ['https://x.com/*', 'https://twitter.com/*'] });
-    if (tabs.length > 0 && tabs[0].id) {
-      chrome.tabs.sendMessage(tabs[0].id, { type: 'EXECUTE_BATCH' });
+    // 每次触发自动执行后，可以重新计算并更新下一次执行时间
+    const settings = await getSettings();
+    const state = await getTaskState();
+    if (state.running) {
+      state.nextRunTime = Date.now() + settings.intervalMinutes * 60 * 1000;
+      await saveTaskState(state);
     }
+    await triggerBatchExecution();
   }
 });

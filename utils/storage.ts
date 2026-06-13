@@ -6,6 +6,7 @@ const DEFAULT_SETTINGS: Settings = {
   enabledTags: [],
   language: 'zh',
   autoRun: true,
+  clickDelaySeconds: 2,
 };
 
 export async function getSettings(): Promise<Settings> {

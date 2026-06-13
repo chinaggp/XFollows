@@ -45,32 +45,16 @@ function copyManifestAndLocales() {
   };
 }
 
-export default defineConfig([
-  // 1. 构建 background.js (使用 iife，避免任何外部模块 import)
-  {
-    plugins: [copyManifestAndLocales()],
-    build: {
-      lib: {
-        entry: resolve(__dirname, 'background/background.ts'),
-        formats: ['iife'],
-        name: 'background',
-        fileName: () => 'background.js',
-      },
-      outDir: 'dist',
-      emptyOutDir: true,
+export default defineConfig({
+  plugins: [copyManifestAndLocales()],
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'background/background.ts'),
+      formats: ['iife'],
+      name: 'background',
+      fileName: () => 'background.js',
     },
+    outDir: 'dist',
+    emptyOutDir: true,
   },
-  // 2. 构建 content.js (使用 iife，因为 content script 不支持 ES module 导入)
-  {
-    build: {
-      lib: {
-        entry: resolve(__dirname, 'content/content.ts'),
-        formats: ['iife'],
-        name: 'content',
-        fileName: () => 'content.js',
-      },
-      outDir: 'dist',
-      emptyOutDir: false,
-    },
-  }
-]);
+});

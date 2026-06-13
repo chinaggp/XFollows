@@ -5,5 +5,15 @@
   "settings_batchSize": { "message": "每次数量" },
   "settings_tags": { "message": "标签筛选" },
   "btn_start": { "message": "开始自动" },
-  "btn_stop": { "message": "停止" }
+  "btn_stop": { "message": "停止" },
+  "status_label": { "message": "状态" },
+  "status_running": { "message": "运行中" },
+  "status_stopped": { "message": "已停止" },
+  "processed_count": { "message": "已处理" },
+  "people_unit": { "message": "人" },
+  "last_run": { "message": "上次" },
+  "success": { "message": "成功" },
+  "failed": { "message": "失败" },
+  "loading": { "message": "加载中..." },
+  "settings_clickDelay": { "message": "回关动作间隔 (秒)" }
 }

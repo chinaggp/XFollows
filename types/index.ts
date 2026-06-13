@@ -4,6 +4,7 @@ export interface Settings {
   enabledTags: string[];
   language: 'zh' | 'en';
   autoRun: boolean;
+  clickDelaySeconds: number;
 }
 
 export interface UserTags {

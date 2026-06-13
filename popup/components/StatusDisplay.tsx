@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { TaskState } from '../../types';
-import { getTaskState } from '../../utils/storage';
+import { t } from '../../utils/i18n';
 
-export default function StatusDisplay() {
-  const [state, setState] = useState<TaskState | null>(null);
+interface StatusDisplayProps {
+  state: TaskState | null;
+}
 
-  useEffect(() => {
-    getTaskState().then(setState);
-    const interval = setInterval(() => getTaskState().then(setState), 5000);
-    return () => clearInterval(interval);
-  }, []);
-
+export default function StatusDisplay({ state }: StatusDisplayProps) {
   if (!state) return null;
 
   return (
-    <div className="text-sm text-gray-600">
-      <div>状态: {state.running ? '运行中' : '已停止'}</div>
-      <div>已处理: {state.processedCount} 人</div>
+    <div className="text-sm text-gray-600 space-y-1 bg-white p-3 rounded border border-gray-100 mb-4">
+      <div>{t('status_label')}: <span className={state.running ? 'text-green-600 font-semibold' : 'text-gray-500'}>{state.running ? t('status_running') : t('status_stopped')}</span></div>
+      <div>{t('processed_count')}: <span className="font-medium">{state.processedCount} {t('people_unit')}</span></div>
       {state.lastRunResult && (
-        <div>上次: 成功 {state.lastRunResult.success}，失败 {state.lastRunResult.failed}</div>
+        <div className="text-xs text-gray-400">{t('last_run')}: {t('success')} {state.lastRunResult.success}，{t('failed')} {state.lastRunResult.failed}</div>
       )}
     </div>
   );

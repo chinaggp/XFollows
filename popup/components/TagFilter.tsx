@@ -1,4 +1,5 @@
 import React from 'react';
+import { t } from '../../utils/i18n';
 
 interface Props {
   enabledTags: string[];
@@ -18,7 +19,7 @@ export default function TagFilter({ enabledTags, onChange }: Props) {
 
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium mb-2">标签筛选</label>
+      <label className="block text-sm font-medium mb-2">{t('settings_tags')}</label>
       <div className="flex flex-wrap gap-2">
         {commonTags.map(tag => (
           <button
